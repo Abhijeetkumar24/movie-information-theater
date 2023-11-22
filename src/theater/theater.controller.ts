@@ -6,8 +6,10 @@ import { responseUtils } from 'src/utils/response.util';
 import { TheaterService } from './theater.service';
 import { Request, Response } from 'express';
 import { AddTheaterDto } from './dto/add.theater.dto';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
-
+@ApiTags('Theater')
+@ApiBearerAuth()
 @Controller('theater')
 export class TheaterController {
 
@@ -19,6 +21,7 @@ export class TheaterController {
 
     @Roles(Role.User, Role.Admin)
     @UseGuards(AuthGuard)
+    @ApiOperation({ summary: 'Get Theaters', description: 'Endpoint to retrieve theaters.' })
     @Get()
     async getMovies(@Res() res: Response) {
         try {
@@ -41,6 +44,8 @@ export class TheaterController {
 
     @Roles(Role.User, Role.Admin)
     @UseGuards(AuthGuard)
+    @ApiOperation({ summary: 'Get Theater by ID', description: 'Endpoint to retrieve a theater by its ID.' })
+    @ApiParam({ name: 'id', description: 'Theater ID' })
     @Get(':id')
     async GetMovieById(@Param('id') theaterId: string, @Req() req: Request, @Res() res: Response,) {
         try {
@@ -64,6 +69,7 @@ export class TheaterController {
 
     @Roles(Role.Admin)
     @UseGuards(AuthGuard)
+    @ApiOperation({ summary: 'Add Theater', description: 'Endpoint to add a new theater.' })
     @Post()
     async addTheater(@Body() addTheaterDto: AddTheaterDto, @Req() req: Request, @Res() res: Response) {
         try {

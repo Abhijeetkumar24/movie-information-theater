@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Theater } from './schemas/theater.schema';
 import { Model } from 'mongoose';
-import { CustomException } from 'src/utils/exception.util';
-import { ExceptionMessage, HttpStatusMessage } from 'src/interface/enum';
+import { CustomException } from '../utils/exception.util';
+import { ExceptionMessage, HttpStatusMessage } from '../interface/enum';
 import { AddTheaterDto } from './dto/add.theater.dto';
 import { AcceptAny } from 'src/interface/type';
 
@@ -33,8 +33,8 @@ export class TheaterService {
             return await this.TheaterModel.findById(theaterId)
 
         } catch (error) {
-            throw new CustomException(ExceptionMessage.ERROR_IN_THEATER_FETCHING, HttpStatusMessage.BAD_REQUEST).getError();
-
+            // throw new CustomException(ExceptionMessage.ERROR_IN_THEATER_FETCHING, HttpStatusMessage.BAD_REQUEST).getError();
+            throw new NotFoundException;
         }
     }
 
