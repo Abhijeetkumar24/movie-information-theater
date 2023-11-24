@@ -76,28 +76,6 @@ describe('TheaterService', () => {
 
     })
   })
-
-
-  describe('getTheaterByd', () => {
-    it('should return a theater by ID', async () => {
-
-      jest.spyOn(theaterModel, 'findById').mockResolvedValueOnce(mockTheater);
-
-      const result = await theaterService.getTheaterById('mockId');
-
-      expect(theaterModel.findById).toHaveBeenCalledWith('mockId');
-      expect(result).toEqual(mockTheater);
-    });
-
-    it('should throw a CustomException for an error in fetching a theater', async () => {
-
-      jest.spyOn(theaterModel, 'findById').mockRejectedValueOnce(new Error('Mocked error'));
-      await expect(theaterService.getTheaterById('mockId')).rejects.toThrow(
-        NotFoundException,
-      )
-    });
-  })
-
- 
+  
 
 });

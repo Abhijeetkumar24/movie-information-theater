@@ -69,6 +69,20 @@ export enum HttpStatusMessage {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export enum ExceptionMessage {
 
 
@@ -124,8 +138,9 @@ export enum ExceptionMessage {
     ERROR_IN_THEATER_FETCHING = "Error in theater fetching",
     ERROR_IN_THEATER_ADDING = "Error in theater adding",
     THEATER_ALREADY_EXIST = "Theater already exist",
-
-
+    NO_THEATERS_FOUND = "NO_THEATERS_FOUND",
+    INVALID_THEATER_ID = "INVALID_THEATER_ID",
+    THEATER_NOT_FOUND = "THEATER_NOT_FOUND"
 }
 
 
