@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-require('dotenv').config({ path: `../${process.env.NODE_ENV}.env` });
+import { MSG } from './interface/enum';
 
 
 async function bootstrap() {
@@ -11,13 +11,13 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .addBearerAuth()
-    .setTitle('Movie Microservice')
-    .setDescription('The movies API description')
-    .setVersion('1.0')
-    .addTag('APIs')
+    .setTitle(MSG.THEATER_MICROSERVICE)
+    .setDescription(MSG.THEATER_DESCRIPTION)
+    .setVersion(MSG.SET_VERSION)
+    .addTag(MSG.ADD_TAG)
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup(MSG.API, app, document);
 
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(process.env.PORT);

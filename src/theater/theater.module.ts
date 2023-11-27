@@ -4,10 +4,11 @@ import { TheaterService } from './theater.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Theater, TheaterSchema } from './schemas/theater.schema';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({}),
     MongooseModule.forFeature(
       [
         { name: Theater.name, schema: TheaterSchema },
@@ -19,9 +20,9 @@ import { join } from 'path';
         name: 'AUTH_PACKAGE',
         transport: Transport.GRPC,
         options: {
-          url: 'localhost:50051',
-          package: 'auth',
-          protoPath: join(__dirname, '../../../proto/auth.proto'),
+          url: process.env.AUTH_GRPC_URL,
+          package: process.env.AUTH_PACKAGE,
+          protoPath: process.env.AUTH_PROTO_PATH,
         },
       },
     ])

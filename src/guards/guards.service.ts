@@ -48,10 +48,6 @@ export class AuthGuard implements CanActivate, OnModuleInit {
                             context.getClass(),
                         ]);
 
-                        // if (requiredRoles != null && requiredRoles != result.role) {
-                        //     reject(new UnauthorizedException(ExceptionMessage.WRONG_ROLE));
-                        // }
-
                         if (requiredRoles && requiredRoles.length > 0 && !requiredRoles.some(role => result.role.includes(role))) {
                             reject(new UnauthorizedException(ExceptionMessage.WRONG_ROLE));
                         }
