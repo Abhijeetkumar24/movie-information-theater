@@ -15,6 +15,12 @@ export class TheaterService {
         @InjectModel(Theater.name) private TheaterModel: Model<Theater>,
     ) { }
 
+    /**
+     * Retrieves theaters.
+     *
+     * @returns {Promise<any>} A Promise that resolves with the list of theaters.
+     * @throws {Error} Throws an error if there is an issue during the retrieval of theaters.
+     */
     async getTheaters(): Promise<any> {
         try {
         
@@ -32,6 +38,13 @@ export class TheaterService {
     }
 
 
+    /**
+     * Retrieves a theater by its ID.
+     *
+     * @param {string} theaterId - The ID of the theater to retrieve.
+     * @returns {Promise<any>} A Promise that resolves with the details of the theater.
+     * @throws {Error} Throws an error if there is an issue during the retrieval of the theater.
+     */
     async getTheaterById(theaterId: string): Promise<any> {
         try {
             
@@ -53,6 +66,13 @@ export class TheaterService {
     
 
 
+    /**
+     * Adds a new theater.
+     *
+     * @param {AddTheaterDto} addTheaterDto - The data for the new theater.
+     * @returns {Promise<AcceptAny>} A Promise that resolves when the theater is added successfully.
+     * @throws {Error} Throws an error if there is an issue during the addition of the theater.
+     */
     async addTheater(addTheaterDto: AddTheaterDto): Promise<AcceptAny> {
         try {
 
