@@ -5,7 +5,7 @@ export enum MSG {
     THEATER_DESCRIPTION = "The theater API description",
     SET_VERSION = "1.0",
     ADD_TAG = "APIs",
-    API = "api"
+    API = "api",
 }
 
 

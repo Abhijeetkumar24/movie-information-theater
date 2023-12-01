@@ -1,8 +1,8 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { Roles } from 'src/decorators/role.decorator';
-import { ExceptionMessage, HttpStatusMessage, Role, SuccessMessage } from 'src/interface/enum';
-import { AuthGuard } from 'src/guards/guards.service';
-import { responseUtils } from 'src/utils/response.util';
+import { Body, Controller, Get, Param, Post, Req, Res, UseGuards,} from '@nestjs/common';
+import { Roles } from '../decorators/role.decorator';
+import { ExceptionMessage, HttpStatusMessage, Role, SuccessMessage } from '../interface/enum';
+import { AuthGuard } from '../guards/guards.service';
+import { responseUtils } from '../utils/response.util';
 import { TheaterService } from './theater.service';
 import { Request, Response } from 'express';
 import { AddTheaterDto } from './dto/add.theater.dto';

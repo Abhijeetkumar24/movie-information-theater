@@ -5,11 +5,15 @@ import { Model, isValidObjectId } from 'mongoose';
 import { CustomException } from '../utils/exception.util';
 import { ExceptionMessage, HttpStatusMessage } from '../interface/enum';
 import { AddTheaterDto } from './dto/add.theater.dto';
-import { AcceptAny } from 'src/interface/type';
+import { Logger } from 'winston';
+
 
 
 @Injectable()
 export class TheaterService {
+
+    private readonly logger = new Logger();
+
 
     constructor(
         @InjectModel(Theater.name) private TheaterModel: Model<Theater>,
@@ -24,7 +28,7 @@ export class TheaterService {
     async getTheaters(): Promise<any> {
         try {
         
-            const theaters = await this.TheaterModel.find({}, { location: 1, _id: 0 }).limit(5);
+            const theaters = await this.TheaterModel.find({}, { location: 1, _id: 0 });
 
             if (!theaters || theaters.length === 0) {
                 throw new CustomException(ExceptionMessage.NO_THEATERS_FOUND, HttpStatusMessage.NOT_FOUND).getError();
@@ -33,6 +37,7 @@ export class TheaterService {
             return theaters;
         }
         catch (error) {
+            this.logger.warn(error);
             throw error;
         }
     }
@@ -60,6 +65,7 @@ export class TheaterService {
     
             return theater;
         } catch (error) {
+            this.logger.warn(error);
             throw error;
         }
     }
@@ -70,10 +76,10 @@ export class TheaterService {
      * Adds a new theater.
      *
      * @param {AddTheaterDto} addTheaterDto - The data for the new theater.
-     * @returns {Promise<AcceptAny>} A Promise that resolves when the theater is added successfully.
+     * @returns {Promise<any>} A Promise that resolves when the theater is added successfully.
      * @throws {Error} Throws an error if there is an issue during the addition of the theater.
      */
-    async addTheater(addTheaterDto: AddTheaterDto): Promise<AcceptAny> {
+    async addTheater(addTheaterDto: AddTheaterDto): Promise<any> {
         try {
 
             if (!addTheaterDto.theaterId) {
@@ -90,6 +96,7 @@ export class TheaterService {
             return;
         }
         catch (error) {
+            this.logger.warn(error);
             throw error;
         }
 

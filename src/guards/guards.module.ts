@@ -2,7 +2,6 @@
 import { Module } from '@nestjs/common';
 import { AuthGuard } from './guards.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 
 

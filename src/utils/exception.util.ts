@@ -1,11 +1,10 @@
 import { ExceptionMessage, HttpStatusCode, HttpStatusMessage } from '../interface/enum';
-import { AcceptAny } from '../interface/type';
 
 export class ExceptionHandler {
     protected code!: number;
     protected status!: string;
-    protected data: AcceptAny;
-    constructor() {}
+    protected data: any;
+
     getError() {
         return {
             code:

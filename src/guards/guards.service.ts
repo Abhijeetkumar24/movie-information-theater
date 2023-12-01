@@ -12,8 +12,8 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { Request } from 'express';
 import { AuthService } from 'src/interface/auth.interface';
 import { Reflector } from '@nestjs/core';
-import { ExceptionMessage, Role } from 'src/interface/enum';
-import { ROLES_KEY } from 'src/decorators/role.decorator';
+import { ExceptionMessage, Role } from '../interface/enum';
+import { ROLES_KEY } from '../decorators/role.decorator';
 
 
 @Injectable()
