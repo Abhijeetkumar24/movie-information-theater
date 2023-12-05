@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TheaterService } from './theater.service';
 import { Theater } from './schemas/theater.schema';
 import { getModelToken } from '@nestjs/mongoose';
+import { ConflictException } from '@nestjs/common';
 
 describe('UsersService', () => {
     let service: TheaterService;
@@ -11,6 +12,26 @@ describe('UsersService', () => {
         find: jest.fn(),
         findById: jest.fn(),
         findOne: jest.fn(),
+        create: jest.fn(),
+    };
+
+    const theater = {
+        theaterId: 1010,
+        location: {
+            address: {
+                street1: "1025 Veterans Pkwy",
+                city: "Clarksville",
+                state: "IN",
+                zipcode: "47129"
+            },
+            geo: {
+                type: "Point",
+                coordinates: [
+                    -85.76461,
+                    38.327175
+                ]
+            }
+        }
     };
 
     beforeEach(async () => {
@@ -33,34 +54,16 @@ describe('UsersService', () => {
 
     describe('getTheaters', () => {
         it('should return an array of theater ', async () => {
-            const theater = {
-                theaterId: 1010,
-                location: {
-                    address: {
-                        street1: "1025 Veterans Pkwy",
-                        city: "Clarksville",
-                        state: "IN",
-                        zipcode: "47129"
-                    },
-                    geo: {
-                        type: "Point",
-                        coordinates: [
-                            -85.76461,
-                            38.327175
-                        ]
-                    }
-                }
-            };
-    
+
             const theaters = [theater];
-    
+
             jest.spyOn(mockTheaterRepository, 'find').mockReturnValue(theaters);
-    
+
             const result = await service.getTheaters();
-    
+
             expect(mockTheaterRepository.find).toHaveBeenCalled();
             expect(result).toEqual(theaters);
-    
+
         });
 
 
@@ -69,12 +72,55 @@ describe('UsersService', () => {
 
             await expect(service.getTheaters()).rejects.toThrow();
         });
-        
-        
-    
+
+    });
+
+
+    describe('getTheaterById', () => {
+        it('should return a theater ', async () => {
+
+            const id = '59a47286cfa9a3a73e51e72c';
+
+            jest.spyOn(mockTheaterRepository, 'findById').mockReturnValue(theater);
+
+            const result = await service.getTheaterById(id);
+
+            expect(mockTheaterRepository.findById).toHaveBeenCalledWith(id);
+            expect(result).toEqual(theater);
+
+        });
+
+
+        it('should throw an error if no theaters are found', async () => {
+            const id = '59a47286cfa9a3a73e51e72d';
+
+            jest.spyOn(mockTheaterRepository, 'findById').mockResolvedValue(null);
+
+            await expect(service.getTheaterById(id)).rejects.toThrow();
+        });
     })
-    
-    it('getTheaterById', () => { });
-    it('addTheater', () => { });
+
+    describe('addTheater', () => {
+        it('should return a new theater ', async () => {
+
+            jest.spyOn(mockTheaterRepository, 'create').mockReturnValue(theater);
+
+            const result = await service.addTheater(theater);
+
+            expect(mockTheaterRepository.create).toHaveBeenCalledWith(theater);
+            expect(result).toEqual(theater);
+
+        });
+
+        it('should throw an error if theater already exists', async () => {
+
+            theater.theaterId = 1010;
+
+            jest.spyOn(mockTheaterRepository, 'findOne').mockResolvedValue(theater);
+
+            await expect(service.addTheater(theater)).rejects.toThrow(ConflictException);
+        });
+
+    })
 
 });

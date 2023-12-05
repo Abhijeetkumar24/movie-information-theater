@@ -1,10 +1,8 @@
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards,} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, } from '@nestjs/common';
 import { Roles } from '../decorators/role.decorator';
-import { ExceptionMessage, HttpStatusMessage, Role, SuccessMessage } from '../interface/enum';
+import { Role, SuccessMessage } from '../interface/enum';
 import { AuthGuard } from '../guards/guards.service';
-import { responseUtils } from '../utils/response.util';
 import { TheaterService } from './theater.service';
-import { Request, Response } from 'express';
 import { AddTheaterDto } from './dto/add.theater.dto';
 import { ApiBearerAuth, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
@@ -29,23 +27,13 @@ export class TheaterController {
     @UseGuards(AuthGuard)
     @ApiOperation({ summary: 'Get Theaters', description: 'Endpoint to retrieve theaters.' })
     @Get()
-    async getMovies(@Res() res: Response): Promise<void> {
+    async GetAllTheaters(): Promise<any> {
         try {
             const response = await this.theaterService.getTheaters();
-            let finalResponse = responseUtils.successResponse(
-                response,
-                SuccessMessage.THEATERS_FETCH_SUCCESSFULLY,
-                HttpStatusMessage.OK
-            )
-            res.status(finalResponse.code).send(finalResponse);
+            return { message: SuccessMessage.THEATERS_FETCH_SUCCESSFULLY, data: response }
         } catch (error) {
-            let err = responseUtils.errorResponse(
-                error,
-                ExceptionMessage.ERROR_IN_THEATERS_FETCH,
-            );
-            res.status(err.code).send(err);
+            return error
         }
-
     }
 
     /**
@@ -61,23 +49,9 @@ export class TheaterController {
     @ApiOperation({ summary: 'Get Theater by ID', description: 'Endpoint to retrieve a theater by its ID.' })
     @ApiParam({ name: 'id', description: 'Theater ID' })
     @Get(':id')
-    async GetMovieById(@Param('id') theaterId: string, @Req() req: Request, @Res() res: Response,): Promise<void> {
-        try {
-            const response = await this.theaterService.getTheaterById(theaterId);
-            let finalResponse = responseUtils.successResponse(
-                response,
-                SuccessMessage.THEATER_FETCH_SUCCESSFULLY,
-                HttpStatusMessage.OK
-            )
-            res.status(finalResponse.code).send(finalResponse);
-        } catch (error) {
-            let err = responseUtils.errorResponse(
-                error,
-                ExceptionMessage.ERROR_IN_THEATER_FETCHING,
-            );
-            res.status(err.code).send(err);
-        }
-
+    async GetTheaterById(@Param('id') theaterId: string,): Promise<any> {
+        const data = await this.theaterService.getTheaterById(theaterId);
+        return { message: SuccessMessage.THEATER_FETCH_SUCCESSFULLY, data: data }
     }
 
 
@@ -93,26 +67,10 @@ export class TheaterController {
     @UseGuards(AuthGuard)
     @ApiOperation({ summary: 'Add Theater', description: 'Endpoint to add a new theater.' })
     @Post()
-    async addTheater(@Body() addTheaterDto: AddTheaterDto, @Req() req: Request, @Res() res: Response): Promise<void> {
-        try {
-            const response = await this.theaterService.addTheater(addTheaterDto);
-            let finalResponse = responseUtils.successResponse(
-                response,
-                SuccessMessage.ADD_THEATER_SUCCESSFULLY,
-                HttpStatusMessage.OK
-            )
-            res.status(finalResponse.code).send(finalResponse);
-        } catch (error) {
-            let err = responseUtils.errorResponse(
-                error,
-                ExceptionMessage.ERROR_IN_THEATER_ADDING,
-            );
-            res.status(err.code).send(err);
-        }
-
+    async AddTheater(@Body() addTheaterDto: AddTheaterDto): Promise<any> {
+        const data = await this.theaterService.addTheater(addTheaterDto);
+        return { message: SuccessMessage.ADD_THEATER_SUCCESSFULLY, data: data }
     }
-
-
 
 }
 

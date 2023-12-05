@@ -14,7 +14,7 @@ import { AuthService } from 'src/interface/auth.interface';
 import { Reflector } from '@nestjs/core';
 import { ExceptionMessage, Role } from '../interface/enum';
 import { ROLES_KEY } from '../decorators/role.decorator';
-
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate, OnModuleInit {
@@ -38,30 +38,28 @@ export class AuthGuard implements CanActivate, OnModuleInit {
             throw new UnauthorizedException();
         }
 
-        return new Promise<boolean>((resolve, reject) => {
-            this.authService.guard({ token }).subscribe({
-                next: (result) => {
-                    if (result.valid) {
+        try {
+            const result = await lastValueFrom(this.authService.guard({ token }));
 
-                        const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
-                            context.getHandler(),
-                            context.getClass(),
-                        ]);
+            if (result.valid) {
 
-                        if (requiredRoles && requiredRoles.length > 0 && !requiredRoles.some(role => result.role.includes(role))) {
-                            reject(new UnauthorizedException(ExceptionMessage.WRONG_ROLE));
-                        }
+                const requiredRoles = this.reflector.getAllAndOverride<Role[]>(ROLES_KEY, [
+                    context.getHandler(),
+                    context.getClass(),
+                ]);
 
-                        request['user'] = { sub: result.userId, role: result.role };
-                        resolve(true);
-                    } else {
-                        reject(new UnauthorizedException());
-                    }
-                },
-            });
-        });
+                if (requiredRoles && requiredRoles.length > 0 && !requiredRoles.some(role => result.role.includes(role))) {
+                    throw new UnauthorizedException(ExceptionMessage.WRONG_ROLE);
+                }
 
-
+                request['user'] = { sub: result.userId, role: result.role };
+                return true;
+            } else {
+                throw new UnauthorizedException();
+            }
+        } catch (error) {
+            throw new UnauthorizedException();
+        }
     }
 
     private extractTokenFromHeader(request: Request): string | undefined {
@@ -70,4 +68,3 @@ export class AuthGuard implements CanActivate, OnModuleInit {
     }
 
 }
-
