@@ -28,12 +28,8 @@ export class TheaterController {
     @ApiOperation({ summary: 'Get Theaters', description: 'Endpoint to retrieve theaters.' })
     @Get()
     async GetAllTheaters(): Promise<any> {
-        try {
-            const response = await this.theaterService.getTheaters();
-            return { message: SuccessMessage.THEATERS_FETCH_SUCCESSFULLY, data: response }
-        } catch (error) {
-            return error
-        }
+        const response = await this.theaterService.getTheaters();
+        return { message: SuccessMessage.THEATERS_FETCH_SUCCESSFULLY, data: response }
     }
 
     /**
